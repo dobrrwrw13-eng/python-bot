@@ -53,7 +53,8 @@ Path(ANNOUNCEMENT_FILES_DIR).mkdir(exist_ok=True)
 
 logging.basicConfig(level=logging.INFO)
 
-bot = Bot(token=API_TOKEN)
+# Глобальні змінні для бота та диспетчера
+bot = None
 dp = Dispatcher()
 
 # =======================
@@ -2014,7 +2015,10 @@ async def settings_back_callback(callback_query: types.CallbackQuery, state: FSM
 # MAIN
 # =======================
 async def main():
-    global applications_listener, news_listener
+    global applications_listener, news_listener, bot
+    
+    # Ініціалізуємо бота з токеном
+    bot = Bot(token=API_TOKEN)
     
     db_init()
     
