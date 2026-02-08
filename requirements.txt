@@ -1,0 +1,4 @@
+aiogram==3.4.1
+firebase-admin==6.5.0
+google-cloud-firestore==2.16.1
+python-dotenv==1.0.0
