@@ -1,1 +1,1 @@
-web: python3 bot_bgpk.py
+web: python3 -c "import sys; sys.exit(0)"

@@ -32,9 +32,7 @@ except ImportError:
 # =======================
 # НАЛАШТУВАННЯ
 # =======================
-API_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
-if not API_TOKEN:
-    raise ValueError("TELEGRAM_BOT_TOKEN не встановлено в .env файлі!")
+API_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '')
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "students.db")
@@ -2048,4 +2046,7 @@ async def main():
 
 
 if __name__ == "__main__":
+    if not API_TOKEN:
+        logging.error("TELEGRAM_BOT_TOKEN не встановлено в .env файлі!")
+        exit(1)
     asyncio.run(main())
