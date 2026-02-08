@@ -1,1 +1,1 @@
-worker: python3 bot_bgpk.py
+web: python3 bot_bgpk.py
