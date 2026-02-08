@@ -3,6 +3,9 @@ import logging
 import os
 import re
 import sqlite3
+import base64
+import json
+import tempfile
 from datetime import datetime, timedelta
 import pytz
 from pathlib import Path
@@ -52,6 +55,39 @@ EMAIL_CONFIG = {
 Path(ANNOUNCEMENT_FILES_DIR).mkdir(exist_ok=True)
 
 logging.basicConfig(level=logging.INFO)
+
+# =======================
+# FIREBASE INITIALIZATION HELPER
+# =======================
+def setup_firebase_credentials():
+    """Инициализирует Firebase credentials из файла или переменной окружения"""
+    # Сначала проверяем есть ли файл
+    if os.path.exists(FIREBASE_CREDENTIALS_PATH):
+        logging.info(f"✅ Используется Firebase ключ из файла: {FIREBASE_CREDENTIALS_PATH}")
+        return True
+    
+    # Если файла нет, проверяем переменную окружения
+    firebase_credentials_b64 = os.getenv('FIREBASE_CREDENTIALS_BASE64', '')
+    if firebase_credentials_b64:
+        try:
+            # Декодируем base64
+            credentials_json = base64.b64decode(firebase_credentials_b64).decode('utf-8')
+            
+            # Сохраняем в временный файл
+            with open(FIREBASE_CREDENTIALS_PATH, 'w') as f:
+                f.write(credentials_json)
+            
+            logging.info("✅ Firebase ключ восстановлен из переменной окружения")
+            return True
+        except Exception as e:
+            logging.error(f"❌ Ошибка при декодировании Firebase credentials: {e}")
+            return False
+    
+    logging.warning("⚠️ Firebase credentials не найдены ни в файле, ни в переменной окружения")
+    return False
+
+# Инициализируем Firebase credentials при загрузке модуля
+setup_firebase_credentials()
 
 # Глобальні змінні для бота та диспетчера
 bot = None
